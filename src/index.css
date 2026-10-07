@@ -1,0 +1,239 @@
+@import 'tailwindcss';
+
+/*
+ * Light theme. Token names are kept from the original palette so every
+ * component picks up the new look without changing its structure:
+ *   abyss → page background (white)      foam  → headings / primary text (navy)
+ *   deep  → alternate section (lt gray)  mist  → body / muted text
+ *   tide, reef → tinted surfaces         brass → primary brand blue
+ *   seaglass → secondary accent (teal)   line  → hairline borders
+ */
+@theme {
+  --color-abyss: #ffffff;
+  --color-deep: #f5f8fc;
+  --color-tide: #eaf1fa;
+  --color-reef: #d6e4f5;
+  --color-line: #e4eaf2;
+  --color-seaglass: #0e7490;
+  --color-brass: #0b5ed7;
+  --color-brass-deep: #084bb0;
+  --color-foam: #0b1f3a;
+  --color-mist: #55657c;
+  --color-coral: #d9472f;
+  --color-gold: #f5a524;
+
+  --font-display: 'Manrope Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Manrope Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-serif: 'Fraunces Variable', 'Iowan Old Style', Georgia, serif;
+
+  --radius-card: 1.25rem;
+  --radius-xl2: 1.25rem;
+  --radius-panel: 1.25rem;
+
+  --shadow-soft: 0 1px 2px rgb(16 24 40 / 0.04), 0 8px 24px -10px rgb(11 31 58 / 0.10);
+  --shadow-card: 0 1px 2px rgb(16 24 40 / 0.04), 0 12px 32px -14px rgb(11 31 58 / 0.14);
+  --shadow-lift: 0 2px 6px rgb(16 24 40 / 0.05), 0 28px 56px -20px rgb(11 31 58 / 0.24);
+  --shadow-glow: 0 0 0 1.5px rgb(11 94 215 / 0.9), 0 28px 60px -22px rgb(11 94 215 / 0.45);
+  --shadow-blue: 0 12px 28px -10px rgb(11 94 215 / 0.55);
+
+  --ease-tide: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-float-slow: float 11s ease-in-out infinite;
+  --animate-bob: bob 6s ease-in-out infinite;
+  --animate-marquee: marquee 48s linear infinite;
+  --animate-swell: swell 18s linear infinite;
+  --animate-swell-fast: swell 11s linear infinite;
+  --animate-twinkle: twinkle 4s ease-in-out infinite;
+
+  @keyframes float {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, -14px, 0); }
+  }
+  @keyframes bob {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(-0.6deg); }
+    50% { transform: translate3d(0, -6px, 0) rotate(0.6deg); }
+  }
+  @keyframes marquee {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50%, 0, 0); }
+  }
+  @keyframes swell {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50%, 0, 0); }
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.25; }
+    50% { opacity: 1; }
+  }
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-stopped { overflow: hidden; }
+
+  body {
+    @apply bg-abyss font-sans text-mist;
+    font-feature-settings: 'ss01', 'cv11';
+    overflow-x: clip;
+  }
+  html { overflow-x: clip; }
+  h1, h2, h3, h4 {
+    @apply font-display text-foam;
+    font-weight: 700;
+    text-wrap: balance;
+    letter-spacing: -0.022em;
+  }
+  p { text-wrap: pretty; }
+  ::selection { background: rgb(11 94 215 / 0.18); color: var(--color-foam); }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brass);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  img, svg, video { display: block; max-width: 100%; }
+}
+
+@layer components {
+  .container-x { @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10; }
+  .section-y { @apply py-20 sm:py-24 lg:py-28; }
+  .section-alt { @apply bg-deep; }
+
+  .font-display { font-weight: 700; letter-spacing: -0.02em; }
+
+  /* Small uppercase label above section titles */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full bg-brass/[0.08] px-3.5 py-1.5 text-xs font-bold tracking-[0.14em] text-brass uppercase;
+  }
+
+  /* Premium white card */
+  .card {
+    background: #fff;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+  }
+  /* uses `translate` (not `transform`) so it composes with Framer Motion's inline transforms */
+  .card-lift {
+    transition: translate 0.5s var(--ease-tide), box-shadow 0.5s var(--ease-tide), border-color 0.3s;
+  }
+  .card-lift:hover {
+    translate: 0 -6px;
+    box-shadow: var(--shadow-lift);
+    border-color: rgb(11 94 215 / 0.18);
+  }
+
+  /* Kept for existing markup: frosted white surfaces that also read well over artwork */
+  .glass {
+    background: rgb(255 255 255 / 0.9);
+    border: 1px solid var(--color-line);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    box-shadow: var(--shadow-soft);
+  }
+  .glass-strong {
+    background: rgb(255 255 255 / 0.96);
+    border: 1px solid var(--color-line);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .text-gilded {
+    background: linear-gradient(100deg, #0b5ed7 0%, #2f80ed 50%, #0e7490 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .text-brassy {
+    background: linear-gradient(100deg, #0b5ed7 10%, #3d8bf2 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .text-moonlit { color: var(--color-foam); }
+
+  .hairline { background: var(--color-line); height: 1px; }
+
+  /* Spotlight card — follows the pointer via --mx / --my */
+  .spotlight { position: relative; isolation: isolate; }
+  .spotlight::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), rgb(11 94 215 / 0.06), transparent 45%);
+    opacity: 0;
+    transition: opacity 0.4s var(--ease-tide);
+    z-index: -1;
+    pointer-events: none;
+  }
+  .spotlight::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 0%), rgb(11 94 215 / 0.45), transparent 50%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s var(--ease-tide);
+    pointer-events: none;
+  }
+  .spotlight:hover::before, .spotlight:hover::after,
+  .spotlight:focus-within::before, .spotlight:focus-within::after { opacity: 1; }
+
+  .ripple-ink {
+    position: absolute;
+    border-radius: 9999px;
+    transform: translate(-50%, -50%) scale(0);
+    animation: ripple 0.7s var(--ease-tide) forwards;
+    pointer-events: none;
+    background: currentColor;
+    opacity: 0.22;
+  }
+  @keyframes ripple {
+    to { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+  }
+
+  .grain::after { content: none; }
+
+  .prose-sea p { @apply mb-5 leading-[1.8] text-mist; }
+  .prose-sea h2 { @apply mt-12 mb-4 text-2xl text-foam sm:text-3xl; }
+  .prose-sea h3 { @apply mt-8 mb-3 text-xl text-foam; }
+  .prose-sea ul { @apply mb-6 space-y-3 pl-0; }
+  .prose-sea li { @apply relative pl-6 leading-[1.75] text-mist; }
+  .prose-sea li::before {
+    content: '';
+    @apply absolute top-[0.7em] left-0 h-1.5 w-1.5 rounded-full bg-brass;
+  }
+  .prose-sea a { @apply text-brass underline decoration-brass/40 underline-offset-4 hover:decoration-brass; }
+
+  .field {
+    @apply w-full rounded-xl border border-line bg-white px-4 py-3.5 text-foam placeholder:text-mist/60 transition;
+    @apply focus:border-brass focus:outline-none focus:ring-4 focus:ring-brass/15;
+  }
+  .field[aria-invalid='true'] { @apply border-coral ring-4 ring-coral/10; }
+  select.field option { background: #fff; color: var(--color-foam); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

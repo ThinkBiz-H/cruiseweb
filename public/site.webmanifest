@@ -1,0 +1,9 @@
+{
+  "name": "Maristella Voyages",
+  "short_name": "Maristella",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#0B5ED7",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
